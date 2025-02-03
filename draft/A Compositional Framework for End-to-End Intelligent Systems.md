@@ -623,6 +623,16 @@ This aligns perfectly with the **functorial** perspective, where changes in doma
 **Key Takeaway**  
 By representing **data** in terms of **polynomial functors**, capturing **entire schemas** as objects in a **database schema category** $\mathbf{DB}$, and modeling **queries** with **profunctors**, we gain a highly structured approach to data modeling and operations. This approach neatly ties back to the domain (Section 3) and requirements (Section 4), while paving the way for consistent system architecture (Section 5). The end result is a clear, mathematically grounded framework that maintains data integrity and eases the complexity of evolving databases in tandem with changing business or regulatory demands.
 
+### 6.4 Algebraic Definitions of Schemas
+
+To reinforce correctness at the data level, we define each schema as an algebraic theory:
+
+- An entity corresponds to a "sort" in the theory.
+- Each attribute or foreign key is modeled as a unary function from one sort to another (or from an entity to a base type).
+- Constraints appear as equational axioms or embedded dependencies.
+
+For instance, if we have an entity Patient with an attribute age: Patient → Int, and a constraint that age must be ≥ 0, we can introduce an equational form or ED (depending on the expressiveness required) into the schema theory. This approach extends the categorical viewpoint (objects, morphisms) to a more algebraic foundation, enabling advanced operations such as chase-like data validations.
+
 ## 7. Implementation in Haskell (and Other Languages)
 
 With domain, requirements, architecture, and data modeling laid out (Sections 3–6), the next phase involves **turning abstract designs into running software**. In functional programming languages—particularly **Haskell**—we can leverage strong type systems and category-theoretic underpinnings to maintain the rigor and consistency established so far. This section details how to view Haskell's types and functions as a **category**, how **monads** and **comonads** systematically structure effects and contexts, and how **code generation** techniques can bridge the gap between high-level design and practical implementation.
@@ -810,125 +820,125 @@ This integrated perspective ensures that **AI** is not a siloed component but a 
 **Key Takeaway**  
 Treating AI modules (including LLMs) as objects in a dedicated **$\mathbf{AI}$** category, combined with **operadic/monoidal** pipelines and **profunctor**-based LLM interactions, offers a powerful, mathematically grounded way to build and maintain intelligent systems. By defining a **functor** from system design $\mathbf{S}$ to AI $\mathbf{AI}$, organizations can ensure that every integration—from data flows to final predictions—remains consistent with domain, requirements, and security constraints. This approach is particularly valuable in sensitive environments (healthcare, government) where AI usage must be transparent, compliant, and robust over time.
 
-## 9. Interaction, UX, and UI: A Categorical Framework
+  ## 9. Interaction, UX, and UI: A Categorical Framework
 
-This section unifies the original category-theoretic approach to interaction design with additional insights on UI motivation, context adaptation, and specialized subcategories. The goal is to maintain the mathematical rigor introduced earlier—treating UX and UI elements as formal objects and morphisms—while integrating practical concerns such as IFML-style "landmark containers," event modeling, and multi-platform adaptation.
+  This section unifies the original category-theoretic approach to interaction design with additional insights on UI motivation, context adaptation, and specialized subcategories. The goal is to maintain the mathematical rigor introduced earlier—treating UX and UI elements as formal objects and morphisms—while integrating practical concerns such as IFML-style "landmark containers," event modeling, and multi-platform adaptation.
 
-### 9.1. Motivation
+  ### 9.1. Motivation
 
-User interfaces (UIs) are the **front line** of any system, exposing domain functionality to real users. Yet in many projects, UI design is handled as a set of ad hoc sketches or partial diagrams—disconnected from the underlying domain, security constraints, or evolving requirements. This can lead to **misalignment** between the formal system logic and how people actually interact with it.  
+  User interfaces (UIs) are the **front line** of any system, exposing domain functionality to real users. Yet in many projects, UI design is handled as a set of ad hoc sketches or partial diagrams—disconnected from the underlying domain, security constraints, or evolving requirements. This can lead to **misalignment** between the formal system logic and how people actually interact with it.  
 
-A **categorical** perspective on UIs helps unify all layers of the architecture. By treating UI states, transitions, and layouts as first-class objects and morphisms, the same compositional clarity that governs domain models, data schemas, and system designs can extend to user interaction. This approach builds on prior work in "A Categorical Framework for Modeling User Interfaces," IFML concepts, and domain-driven engineering, ensuring the UI remains robust, traceable, and easy to adapt when requirements change.
+  A **categorical** perspective on UIs helps unify all layers of the architecture. By treating UI states, transitions, and layouts as first-class objects and morphisms, the same compositional clarity that governs domain models, data schemas, and system designs can extend to user interaction. This approach builds on prior work in "A Categorical Framework for Modeling User Interfaces," IFML concepts, and domain-driven engineering, ensuring the UI remains robust, traceable, and easy to adapt when requirements change.
 
-### 9.2. Defining the Category $\mathbf{UI}$
+  ### 9.2. Defining the Category $\mathbf{UI}$
 
-We define a **category** $\mathbf{UI}$ in which:
+  We define a **category** $\mathbf{UI}$ in which:
 
-- **Objects** capture **UI states or containers**: a "Patient Dashboard," a "Billing Screen," or any user-visible configuration. These objects mirror the key user-facing constructs—screens, modals, wizard steps—ensuring each unique interaction state is clearly identified.
-- **Morphisms** $(f: U \to V)$ represent **transitions** between those states, triggered by user or system events. For instance, a button click, a navigation link, or an automated trigger (e.g., after an AI inference completes).
+  - **Objects** capture **UI states or containers**: a "Patient Dashboard," a "Billing Screen," or any user-visible configuration. These objects mirror the key user-facing constructs—screens, modals, wizard steps—ensuring each unique interaction state is clearly identified.
+  - **Morphisms** $(f: U \to V)$ represent **transitions** between those states, triggered by user or system events. For instance, a button click, a navigation link, or an automated trigger (e.g., after an AI inference completes).
 
-#### Products and Coproducts
+  #### Products and Coproducts
 
-- **Products** $(U \times V)$ model **AND**-composition (e.g., combining two parallel UI containers on a single screen).  
-- **Coproducts** $(U + V)$ model **XOR**-composition (e.g., a wizard where the user sees either step A or step B, but not both at once).
+  - **Products** $(U \times V)$ model **AND**-composition (e.g., combining two parallel UI containers on a single screen).  
+  - **Coproducts** $(U + V)$ model **XOR**-composition (e.g., a wizard where the user sees either step A or step B, but not both at once).
 
-By introducing products and coproducts, we can systematically represent and combine the multiple panels, tabs, or alternative flows typical in a UI.
+  By introducing products and coproducts, we can systematically represent and combine the multiple panels, tabs, or alternative flows typical in a UI.
 
-#### Landmark Containers via Universal Properties
+  #### Landmark Containers via Universal Properties
 
-Some UI frameworks and notations (e.g., IFML) talk about "landmark containers," global areas always reachable from any screen. We can cast this as an **object $L$** in $\mathbf{UI}$ with a universal property: any sibling object $X$ has a unique morphism $X \to L$. This enforces the idea of "universal navigation" found in many real-world UIs.
+  Some UI frameworks and notations (e.g., IFML) talk about "landmark containers," global areas always reachable from any screen. We can cast this as an **object $L$** in $\mathbf{UI}$ with a universal property: any sibling object $X$ has a unique morphism $X \to L$. This enforces the idea of "universal navigation" found in many real-world UIs.
 
-### 9.3. Category of User Interactions $\mathbf{UX}$
+  ### 9.3. Category of User Interactions $\mathbf{UX}$
 
-In some designs, we further refine or rename $\mathbf{UI}$ as $\mathbf{UX}$ (User Experience). Either way, the **core idea** is the same: each **object** is a distinct interaction state or screen, and each **morphism** is a possible **transition**.  
+  In some designs, we further refine or rename $\mathbf{UI}$ as $\mathbf{UX}$ (User Experience). Either way, the **core idea** is the same: each **object** is a distinct interaction state or screen, and each **morphism** is a possible **transition**.  
 
-1. **Screens or Pages**: E.g., "Dashboard," "Patient Detail," "Billing Form."  
-2. **Wizard Steps / Dialogue States**: Multi-step workflows; each step is a separate object.  
-3. **Modal Windows / Sub-Dialogs**: Specialized or nested UI elements can likewise be objects if they represent unique states.
+  1. **Screens or Pages**: E.g., "Dashboard," "Patient Detail," "Billing Form."  
+  2. **Wizard Steps / Dialogue States**: Multi-step workflows; each step is a separate object.  
+  3. **Modal Windows / Sub-Dialogs**: Specialized or nested UI elements can likewise be objects if they represent unique states.
 
-By modeling user actions (button clicks, navigations, system triggers) as morphisms, we gain a compositional way to describe flows: composing morphisms $(U_1 \to U_2) \circ (U_0 \to U_1)$ yields longer chains like "open form → fill data → submit → confirmation."
+  By modeling user actions (button clicks, navigations, system triggers) as morphisms, we gain a compositional way to describe flows: composing morphisms $(U_1 \to U_2) \circ (U_0 \to U_1)$ yields longer chains like "open form → fill data → submit → confirmation."
 
-### 9.4. Compositional UI Design
+  ### 9.4. Compositional UI Design
 
-#### Operads for Multi-Component Layouts
+  #### Operads for Multi-Component Layouts
 
-Modern UIs often feature **multiple components** displayed at once: sidebars, main panels, footers, overlays, etc. Each component can be viewed as a sub-object with its own local states and transitions.
+  Modern UIs often feature **multiple components** displayed at once: sidebars, main panels, footers, overlays, etc. Each component can be viewed as a sub-object with its own local states and transitions.
 
-- **Operad Slot Approach**: An **operad** describes how child components plug into a parent container. For instance, a "Patient Overview" layout might expect three sub-components (demographics, prescriptions, and scheduler). Each sub-component slot is **typed**: only the correct widget can occupy it, ensuring domain alignment (e.g., no unrelated data is rendered in the "prescriptions" slot).  
-- **Nesting and Composition**: If a sub-component itself contains nested widgets, we can define sub-operads or hierarchical compositions, systematically building the entire UI from composable parts.
+  - **Operad Slot Approach**: An **operad** describes how child components plug into a parent container. For instance, a "Patient Overview" layout might expect three sub-components (demographics, prescriptions, and scheduler). Each sub-component slot is **typed**: only the correct widget can occupy it, ensuring domain alignment (e.g., no unrelated data is rendered in the "prescriptions" slot).  
+  - **Nesting and Composition**: If a sub-component itself contains nested widgets, we can define sub-operads or hierarchical compositions, systematically building the entire UI from composable parts.
 
-#### Maintaining Domain Constraints in the UI
+  #### Maintaining Domain Constraints in the UI
 
-Domain rules—"a prescription must have an authorized role," "mandatory fields cannot be empty"—should be enforced **both** in the backend and in the UI:
+  Domain rules—"a prescription must have an authorized role," "mandatory fields cannot be empty"—should be enforced **both** in the backend and in the UI:
 
-1. **Guarded Morphisms**: A transition is undefined (or redirects to an error state) if the user role is insufficient.  
-2. **Type-Safe Widget Composition**: A "patient data entry" widget expects a valid patient record from the domain. If the record is missing or incorrect, the widget does not render properly.
+  1. **Guarded Morphisms**: A transition is undefined (or redirects to an error state) if the user role is insufficient.  
+  2. **Type-Safe Widget Composition**: A "patient data entry" widget expects a valid patient record from the domain. If the record is missing or incorrect, the widget does not render properly.
 
-Such constraints are often linked back to domain categories ($\mathbf{D}$) or requirements ($\mathbf{R}$) via functors, ensuring no mismatch arises between domain logic and the final user interface.
+  Such constraints are often linked back to domain categories ($\mathbf{D}$) or requirements ($\mathbf{R}$) via functors, ensuring no mismatch arises between domain logic and the final user interface.
 
-### 9.5. Modeling Events, Parameter Passing, and Context
+  ### 9.5. Modeling Events, Parameter Passing, and Context
 
-When a morphism in $\mathbf{UI}$ or $\mathbf{UX}$ triggers a transition, it often **carries parameters** (e.g., a patient ID, an invoice reference). We can formalize this via **profunctors** or enriched morphisms that encode input → output transformations:
+  When a morphism in $\mathbf{UI}$ or $\mathbf{UX}$ triggers a transition, it often **carries parameters** (e.g., a patient ID, an invoice reference). We can formalize this via **profunctors** or enriched morphisms that encode input → output transformations:
 
-1. **Event Trigger**: A button click or a system event initiates the morphism.  
-2. **Parameter Binding**: If a user selects "Patient #123," that ID must be passed to the next screen so the UI can load the correct record.
+  1. **Event Trigger**: A button click or a system event initiates the morphism.  
+  2. **Parameter Binding**: If a user selects "Patient #123," that ID must be passed to the next screen so the UI can load the correct record.
 
-Additionally, different **platforms** (Web, Mobile, Desktop) or different **user roles** can lead to varied layouts or screens. We can represent these variations with a **fibration** $\pi: \mathbf{UI} \to \mathbf{Cxt}$, where each fiber $\mathbf{UI}_c$ captures the subcategory of valid screens/transitions under context $c$ (e.g., "Doctor," "Nurse," "Guest," "Mobile vs. Desktop"). This elegantly enforces that certain screens are available only in certain contexts.
+  Additionally, different **platforms** (Web, Mobile, Desktop) or different **user roles** can lead to varied layouts or screens. We can represent these variations with a **fibration** $\pi: \mathbf{UI} \to \mathbf{Cxt}$, where each fiber $\mathbf{UI}_c$ captures the subcategory of valid screens/transitions under context $c$ (e.g., "Doctor," "Nurse," "Guest," "Mobile vs. Desktop"). This elegantly enforces that certain screens are available only in certain contexts.
 
-### 9.6. Ensuring Semantic Consistency
+  ### 9.6. Ensuring Semantic Consistency
 
-#### Mapping Requirements to UX Flows
+  #### Mapping Requirements to UX Flows
 
-Just as a functor $\mathbf{D} \to \mathbf{R}$ translates domain objects into requirement sets, we can define a **functor** from $\mathbf{R}$ (or from the system design $\mathbf{S}$) to $\mathbf{UI}$. A requirement "the system must allow staff to update patient profiles" maps to a UI flow object "edit patient profile" plus transitions for opening, editing, and saving:
+  Just as a functor $\mathbf{D} \to \mathbf{R}$ translates domain objects into requirement sets, we can define a **functor** from $\mathbf{R}$ (or from the system design $\mathbf{S}$) to $\mathbf{UI}$. A requirement "the system must allow staff to update patient profiles" maps to a UI flow object "edit patient profile" plus transitions for opening, editing, and saving:
 
-- This ensures **traceability**: changes in requirements produce corresponding updates in the UI design.  
-- We avoid **drift** between what the system is "supposed to do" and what the UI actually enables.
+  - This ensures **traceability**: changes in requirements produce corresponding updates in the UI design.  
+  - We avoid **drift** between what the system is "supposed to do" and what the UI actually enables.
 
-#### Preserving Domain Logic in Interface Definitions
+  #### Preserving Domain Logic in Interface Definitions
 
-UI definitions often drift from domain logic if not carefully managed:
+  UI definitions often drift from domain logic if not carefully managed:
 
-1. **UI Morphisms Reflect Domain Morphisms**: If the domain states "Prescription must be validated by a pharmacist," the UI transition from "draft prescription" to "approved prescription" is only valid for users with "pharmacist" role.  
-2. **Automatic Propagation of Schema Updates**: If a new field is introduced in the data model, the UI automatically gains a corresponding widget or field; the composition from domain $\mathbf{D}$ to UI $\mathbf{UI}$ enforces this.
+  1. **UI Morphisms Reflect Domain Morphisms**: If the domain states "Prescription must be validated by a pharmacist," the UI transition from "draft prescription" to "approved prescription" is only valid for users with "pharmacist" role.  
+  2. **Automatic Propagation of Schema Updates**: If a new field is introduced in the data model, the UI automatically gains a corresponding widget or field; the composition from domain $\mathbf{D}$ to UI $\mathbf{UI}$ enforces this.
 
-This synergy fosters **semantic alignment**: every UI action corresponds to a meaningful domain operation, and the interface changes in lockstep with any domain or requirement evolutions.
+  This synergy fosters **semantic alignment**: every UI action corresponds to a meaningful domain operation, and the interface changes in lockstep with any domain or requirement evolutions.
 
-### 9.7. Specialized Subcategories (Mobile, Web, Desktop)
+  ### 9.7. Specialized Subcategories (Mobile, Web, Desktop)
 
-In practical deployments, we frequently maintain **separate UI variants**:
+  In practical deployments, we frequently maintain **separate UI variants**:
 
-- **$\mathbf{UI}_\mathrm{web}$**: Web components or pages, where navigation morphisms might carry properties like `rel="external"` or integrate with browser history.  
-- **$\mathbf{UI}_\mathrm{desktop}$**: Possibly multi-window flows, drag-and-drop, or OS-specific transitions.  
-- **$\mathbf{UI}_\mathrm{mobile}$**: Gesture-based transitions (tap, swipe), minimal layouts.
+  - **$\mathbf{UI}_\mathrm{web}$**: Web components or pages, where navigation morphisms might carry properties like `rel="external"` or integrate with browser history.  
+  - **$\mathbf{UI}_\mathrm{desktop}$**: Possibly multi-window flows, drag-and-drop, or OS-specific transitions.  
+  - **$\mathbf{UI}_\mathrm{mobile}$**: Gesture-based transitions (tap, swipe), minimal layouts.
 
-These specialized subcategories inherit from the main category $\mathbf{UI}$, ensuring consistent domain-driven definitions (IDs, roles, data fields) without duplicating logic. Developers can unify them through a single high-level design, then instantiate each subcategory for its respective platform.
+  These specialized subcategories inherit from the main category $\mathbf{UI}$, ensuring consistent domain-driven definitions (IDs, roles, data fields) without duplicating logic. Developers can unify them through a single high-level design, then instantiate each subcategory for its respective platform.
 
-### 9.8. Integrating UI with the Broader Architecture
+  ### 9.8. Integrating UI with the Broader Architecture
 
-Even though $\mathbf{UI}$ focuses on front-end structures, it does not stand alone:
+  Even though $\mathbf{UI}$ focuses on front-end structures, it does not stand alone:
 
-- A functor $\mathbf{S} \to \mathbf{UI}$ maps each microservice or architectural subsystem to the relevant screens or forms that interact with it.  
-- If the UI calls back-end APIs, we can define a functor $\mathbf{UI} \to \mathbf{API}$ describing how each UI transition invokes specific endpoints.  
-- A **context fibration** $\mathbf{UI} \to \mathbf{Cxt}$ (as above) ensures roles, device constraints, or security requirements remain consistent.
+  - A functor $\mathbf{S} \to \mathbf{UI}$ maps each microservice or architectural subsystem to the relevant screens or forms that interact with it.  
+  - If the UI calls back-end APIs, we can define a functor $\mathbf{UI} \to \mathbf{API}$ describing how each UI transition invokes specific endpoints.  
+  - A **context fibration** $\mathbf{UI} \to \mathbf{Cxt}$ (as above) ensures roles, device constraints, or security requirements remain consistent.
 
-Thus, the UI ties seamlessly into the system design, data, and AI layers that the paper discusses in preceding sections.
+  Thus, the UI ties seamlessly into the system design, data, and AI layers that the paper discusses in preceding sections.
 
-### 9.9. Methodology for Practical UI Modeling
+  ### 9.9. Methodology for Practical UI Modeling
 
-A concise roadmap for building a formal, compositional UI:
+  A concise roadmap for building a formal, compositional UI:
 
-1. **Identify Top-Level Containers**: Each major feature—"Patient Dashboard," "Appointment Panel," "Billing Screen"—becomes an object.  
-2. **Use Products/Coproducts**: Combine parallel sub-containers (products) or alternate flows (coproducts).  
-3. **List Events and Morphisms**: For each user action or system trigger, define the transition from one screen object to another.  
-4. **Contextualize**: If multiple user roles or device profiles exist, treat these as fibers in a fibration $\mathbf{UI} \to \mathbf{Cxt}$.  
-5. **Apply Operadic Composition**: For multi-component layouts, define child slots and permissible widgets.  
-6. **Link to Data and Domain**: Use functors to ensure domain constraints and schema changes propagate automatically into the UI.  
-7. **Generate Code Stubs**: If using a typed language (e.g., Haskell, TypeScript), auto-generate components or route definitions based on the category structure.  
+  1. **Identify Top-Level Containers**: Each major feature—"Patient Dashboard," "Appointment Panel," "Billing Screen"—becomes an object.  
+  2. **Use Products/Coproducts**: Combine parallel sub-containers (products) or alternate flows (coproducts).  
+  3. **List Events and Morphisms**: For each user action or system trigger, define the transition from one screen object to another.  
+  4. **Contextualize**: If multiple user roles or device profiles exist, treat these as fibers in a fibration $\mathbf{UI} \to \mathbf{Cxt}$.  
+  5. **Apply Operadic Composition**: For multi-component layouts, define child slots and permissible widgets.  
+  6. **Link to Data and Domain**: Use functors to ensure domain constraints and schema changes propagate automatically into the UI.  
+  7. **Generate Code Stubs**: If using a typed language (e.g., Haskell, TypeScript), auto-generate components or route definitions based on the category structure.  
 
-This process merges the **categorical approach** with practical engineering tasks, guaranteeing that the UI remains consistent with evolving domain logic, security rules, and system architecture.
+  This process merges the **categorical approach** with practical engineering tasks, guaranteeing that the UI remains consistent with evolving domain logic, security rules, and system architecture.
 
-**Key Takeaway**  
-By defining UI/UX elements—screens, states, transitions—as objects and morphisms in a **category** (often called $\mathbf{UI}$ or $\mathbf{UX}$), and leveraging **operadic** or **compositional** techniques for multi-component layouts, teams maintain **semantic consistency** across all layers of the system. Guarded transitions, type-safe widget composition, context fibrations, and functorial mappings to requirements, data, and API layers ensure that any UI remains aligned with the domain and flexible in the face of new features or refactorings.  
+  **Key Takeaway**  
+  By defining UI/UX elements—screens, states, transitions—as objects and morphisms in a **category** (often called $\mathbf{UI}$ or $\mathbf{UX}$), and leveraging **operadic** or **compositional** techniques for multi-component layouts, teams maintain **semantic consistency** across all layers of the system. Guarded transitions, type-safe widget composition, context fibrations, and functorial mappings to requirements, data, and API layers ensure that any UI remains aligned with the domain and flexible in the face of new features or refactorings.  
 
 ## 10. Infrastructure and Deployment
 
@@ -1300,6 +1310,15 @@ All these changes flow back through the system design (Section 5), data schemas 
 
 **Key Takeaway**  
 Lifecycle management in a category-theoretic framework relies on **2-categorical refactoring** for high-level architecture transitions, **morphisms** in $\mathbf{DB}$ (schemas) and $\mathbf{AI}$ (models) for versioning, and **continuous feedback loops** enriched by performance metrics. This unified approach ensures that **every** significant change—be it a database migration, AI model update, or architectural shift—preserves coherence with domain logic, system design, and user-facing requirements. By embedding these processes into the same mathematical structure that drives day-to-day code and configuration generation, organizations achieve both adaptability and reliability over the long haul.
+
+### 14.x. 2-Categorical Refactoring with Schema Mappings
+
+A refactoring from an old schema S to a new schema S' can be formally modeled by a mapping F : S → S'. If subsequent changes yield S'', then composing F with G : S' → S'' yields a new mapping G○F : S → S''. In algebraic model management, these morphisms can often be inverted or quasi-inverted. So if a new schema fails integration tests, we can revert:
+
+1. Compose G with F⁻¹ to get back from S'' to S.  
+2. Maintain partial data merges or transformations through explicit rules (e.g., EDs or foreign key constraints) that are recognized as 2-morphisms.
+
+By representing transformations as morphisms and refactorings as 2-morphisms, CFIS keeps the entire system's structural evolution auditable and formally validated.
 
 ## 15. Case Study: Healthcare Intelligent System
 
