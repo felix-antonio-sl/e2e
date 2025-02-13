@@ -1,0 +1,132 @@
+:root {
+  --background-color: #fff;
+  --text-color: #333;
+  --header1-color: #0096C7;
+  --header2-color: #B30072;
+  --header3-color: #00A3C4;
+  --header4-color: #B30072;
+  --header5-color: #00A3C4;
+  --header6-color: #B30072;
+  --link-color: #B30072;
+  --link-hover-color: #0096C7;
+  --table-border: #0077B6;
+  --table-border-dark: #005082;
+  --code-bg: rgba(179, 0, 114, 0.15);
+  --code-color: #B30072;
+  --blockquote-bg: #f5f5f5;
+}
+
+body {
+  background: var(--background-color);
+  color: var(--text-color);
+  position: relative;
+  margin: 0;
+}
+
+body::before {
+  content: "";
+  background: url("/paper_e2e/fondo-carta-gore.jpeg") no-repeat;
+  background-size: contain;
+  opacity: 0.1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* Contenedor para pantalla */
+.content {
+  padding: 2.5cm;
+  box-sizing: border-box;
+}
+
+/* Encabezados centrados */
+h1, h2, h3, h4, h5, h6 {
+  text-align: center;
+}
+h1 { color: var(--header1-color); }
+h2 { color: var(--header2-color); }
+h3 { color: var(--header3-color); }
+h4 { color: var(--header4-color); }
+h5 { color: var(--header5-color); }
+h6 { color: var(--header6-color); }
+
+a {
+  color: var(--link-color);
+}
+a:hover {
+  color: var(--link-hover-color);
+}
+
+blockquote {
+  background: var(--blockquote-bg);
+  border-left: 4px solid var(--header1-color);
+}
+
+/* Tablas centradas */
+table {
+  background: var(--background-color);
+  margin: auto;
+  border-collapse: collapse;
+}
+th, td {
+  text-align: center;
+  padding: 6px;
+}
+th {
+  background: var(--table-border);
+  color: var(--background-color);
+  border: 1px solid var(--table-border-dark);
+}
+td {
+  border: 1px solid var(--table-border);
+}
+
+:not(pre) > code {
+  background: var(--code-bg);
+  color: var(--code-color);
+}
+
+ul li::marker {
+  color: var(--header1-color);
+}
+ol li::marker {
+  color: var(--header2-color);
+}
+
+/* Configuración para impresión */
+@page {
+  margin: 2.5cm;
+}
+
+@media print {
+  body {
+    overflow: visible !important;
+    z-index: 0;
+  }
+  /* En impresión, el margen se aplica en cada página vía @page, por lo que se elimina el padding extra */
+  .content {
+    padding: 0;
+  }
+  /* Ocultamos el background del body para la impresión */
+  body::before {
+    display: none;
+  }
+  /* Aplicamos la imagen de fondo a html para cubrir toda la hoja impresa */
+  html::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: url("/paper_e2e/fondo-carta-gore.jpeg") no-repeat center center;
+    background-size: calc(100% + 7.5cm) calc(100% + 7.5cm);
+    background-position: -2.5cm -2.5cm;
+    z-index: -9999;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
